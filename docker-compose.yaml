@@ -1,0 +1,35 @@
+services:
+  node:
+    build:
+      context: ./node
+    networks:
+      - desafio-network
+    container_name: node
+    ports:
+      - 3000:3000
+
+  nginx:
+    build:
+      context: ./nginx
+    networks:
+      - desafio-network
+    container_name: nginx
+    ports:
+      - 8080:80
+
+  mysql:
+    image: mysql
+    command: --innodb-use-native-aio=0
+    container_name: mysql
+    restart: always
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=desafio
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - desafio-network
+
+networks:
+  desafio-network:
+    driver: bridge
