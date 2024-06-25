@@ -16,9 +16,15 @@ const connectDB = async () => {
 app.get("/", async (_, res) => {
   const connection = await connectDB();
 
-  const sql = `INSERT INTO people(name) VALUES ('MATHEUS')`;
-  await connection.query(sql);
+  const [tables] = await connection.query("SHOW TABLES");
 
+  if (!tables?.length) {
+    await connection.query(
+      `CREATE TABLE people (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255), PRIMARY KEY (id))`
+    );
+  }
+
+  await connection.query(`INSERT INTO people(name) VALUES ('MATHEUS')`);
   const selectSql = `SELECT * FROM people`;
   const [rows] = await connection.query(selectSql);
 
