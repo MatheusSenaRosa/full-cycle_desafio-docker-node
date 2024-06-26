@@ -2,6 +2,9 @@ services:
   node:
     build:
       context: ./node
+    entrypoint: dockerize -wait tcp://mysql:3306 -timeout 20s ./docker-entrypoint.sh node ./index.js
+    volumes:
+      - ./node:/app
     networks:
       - desafio-network
     container_name: node
